@@ -1,0 +1,15 @@
+.git
+.local
+.pythonlibs
+.venv
+node_modules
+**/node_modules
+**/dist
+**/.tsbuildinfo
+data
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.*
+!.env.example

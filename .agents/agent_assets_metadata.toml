@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "ubmKPHbbTBwIA8CEVoQLC"
+uri = "file://research/notes.md"
+type = "text"
+title = "Research Notes: AI Support & Decision Intelligence"
+description = "Research plan and evidence log for the in-app market strategy module."
+logical_id = "33d76912-f52d-4c1e-a9f3-434ce4ee08b1"
+content_hash = "sha256:47e5c2ae778c33cfb954453787b9cc3397b4d9123937a41269b5f20ad966bddf"
+size = 2176
+mtime_ms = 1793096267719
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:24394e21-1b02-4749-927f-5acf94bc4fa5/33d76912-f52d-4c1e-a9f3-434ce4ee08b1/4e10de60-18e2-4712-b0db-beb9acda8df4"
+storage_version_token = "1793096278086062"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "sidEk6c-LJhQSwm9NFgxp"
+uri = "file://research/market-analysis-2026.md"
+type = "text"
+title = "MENA support intelligence market analysis"
+description = "Cited research on market signals, competitors, positioning, pricing hypotheses, assumptions, and limitations."
+logical_id = "725809cd-dc83-4600-a1b5-57f5dfafee50"
+content_hash = "sha256:0faf3d1fed411eedf65dee6dac353eb087318c3ddeee11dd88e94e1f95bb3763"
+size = 9754
+mtime_ms = 1793097102816
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:24394e21-1b02-4749-927f-5acf94bc4fa5/725809cd-dc83-4600-a1b5-57f5dfafee50/fc7f6bf0-5474-4783-92d7-962913ba7f7d"
+storage_version_token = "1793098759035417"
+content_type = "text/markdown"

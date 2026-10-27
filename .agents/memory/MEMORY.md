@@ -1,0 +1,1 @@
+- [Permanent brand identity](brand-identity.md) — use Fahad Technology Solutions / فهد للحلول التقنية throughout this product.

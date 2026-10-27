@@ -1,0 +1,178 @@
+[
+  {
+    "key": "gartner-service-survey",
+    "title": "Gartner: 60% of Customer Service Agents Fail to Promote Self-Service",
+    "url": "https://www.gartner.com/en/newsroom/press-releases/2025-06-02-gartner-survey-finds-60-percent-of-customer-service-agents-fail-to-promote-self-service",
+    "date": "2025-06-02",
+    "tier": 1
+  },
+  {
+    "key": "gartner-crm-css-forecast",
+    "title": "Gartner Forecast Analysis: CRM Customer Service and Support Software",
+    "url": "https://www.gartner.com/en/documents/6258351",
+    "date": "2025-03-11",
+    "tier": 1
+  },
+  {
+    "key": "saudi-dga-indicators",
+    "title": "Saudi Press Agency: Digital Government Indicators",
+    "url": "https://www.spa.gov.sa/en/N2363772",
+    "date": "2025-07-20",
+    "tier": 1
+  },
+  {
+    "key": "saudi-dga-innovation",
+    "title": "Saudi Press Agency: Digital Government Transformation 2025",
+    "url": "https://www.spa.gov.sa/N2437761",
+    "date": "2025-11-06",
+    "tier": 1
+  },
+  {
+    "key": "sdaia-ai-strategy",
+    "title": "SDAIA National Strategy for Data and AI",
+    "url": "https://sdaia.gov.sa/en/SDAIA/SdaiaStrategies/Pages/NationalStrategyForDataandAI.aspx",
+    "date": "2020-07-17",
+    "tier": 1
+  },
+  {
+    "key": "vision2030-ntp",
+    "title": "Saudi Vision 2030: National Transformation Program",
+    "url": "https://www.vision2030.gov.sa/en/explore/programs/national-transformation-program",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "mcit-ai-investment",
+    "title": "MCIT: Saudi AI investment announcement",
+    "url": "https://mcit.gov.sa/ar/news/%D8%A7%D9%84%D8%B9%D8%B5%D8%B1-%D8%A7%D9%84%D8%B0%D9%83%D9%8A-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A-%D8%B1%D8%AD%D9%84%D8%A9-%D8%AA%D9%82%D9%86%D9%8A%D8%A9-%D9%86%D8%AD%D9%88-%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%AF%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9-%D9%81%D9%8A-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A",
+    "date": "2025-09-16",
+    "tier": 1
+  },
+  {
+    "key": "intercom-pricing",
+    "title": "Intercom pricing",
+    "url": "https://www.intercom.com/pricing",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "freshworks-pricing",
+    "title": "Freshdesk Omni pricing",
+    "url": "https://www.freshworks.com/freshdesk/omni/pricing",
+    "date": "2025-01-27",
+    "tier": 1
+  },
+  {
+    "key": "zendesk-pricing",
+    "title": "Zendesk pricing",
+    "url": "https://www.zendesk.com/pricing?monthly",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "zendesk-outcome-pricing",
+    "title": "Zendesk outcome-based AI pricing",
+    "url": "https://www.zendesk.com/blog/ai/agentic-ai/outcome-based-pricing/",
+    "date": "2026-04-17",
+    "tier": 1
+  },
+  {
+    "key": "salesforce-pricing",
+    "title": "Salesforce Service Cloud pricing",
+    "url": "https://www.salesforce.com/service/pricing/",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "salesforce-arabic-report",
+    "title": "Middle East AI News: Salesforce Agentforce Arabic launch report",
+    "url": "https://www.middleeastainews.com/p/salesforce-launches-agentforce-ai",
+    "date": "2025-11-26",
+    "tier": 2
+  },
+  {
+    "key": "genesys-uae-region",
+    "title": "Genesys announces its first Middle East Genesys Cloud CX region in the UAE",
+    "url": "https://www.genesys.com/company/newsroom/announcements/genesys-announces-first-middle-east-genesys-cloud-cx-region-in-the-united-arab-emirates",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "genesys-pricing",
+    "title": "Genesys Cloud CX regional pricing",
+    "url": "https://www.genesys.com/en-sg/pricing",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "nice-cxone",
+    "title": "NICE CXone platform",
+    "url": "https://www.nice.com/products/cxone",
+    "date": "2026-10-27",
+    "tier": 1
+  },
+  {
+    "key": "nber-ai-work",
+    "title": "Generative AI at Work",
+    "url": "https://www.nber.org/papers/w31161",
+    "date": "2023",
+    "tier": 1
+  },
+  {
+    "key": "springer-escalation",
+    "title": "Customer support ticket escalation prediction using feature engineering",
+    "url": "https://link.springer.com/article/10.1007/s00766-018-0292-3",
+    "date": "2018-04-06",
+    "tier": 1
+  },
+  {
+    "key": "memerag-acl",
+    "title": "MEMERAG: A Multilingual End-to-End Meta-Evaluation Benchmark",
+    "url": "https://aclanthology.org/2025.acl-long.1101",
+    "date": "2025-07-10",
+    "tier": 1
+  },
+  {
+    "key": "xrag-emnlp",
+    "title": "XRAG: Cross-lingual Retrieval-Augmented Generation",
+    "url": "https://aclanthology.org/2025.findings-emnlp.849",
+    "date": "2025-11-01",
+    "tier": 1
+  },
+  {
+    "key": "saudi-pdpl",
+    "title": "SDAIA: Personal Data Protection Law (English text)",
+    "url": "https://sdaia.gov.sa/en/SDAIA/about/Documents/Personal%20Data%20English%20V2-23April2023-%20Reviewed-.pdf",
+    "date": "2023-04-23",
+    "tier": 1
+  },
+  {
+    "key": "benchmarkit-saas",
+    "title": "Pavilion and Benchmarkit: 2025 B2B SaaS Performance Benchmarks",
+    "url": "https://5242563.fs1.hubspotusercontent-na1.net/hubfs/5242563/Pavilion%20Benchmarkit%202025%20SaaS%20Performance%20Benchmarks.pdf",
+    "date": "2025",
+    "tier": 2
+  },
+  {
+    "key": "bessemer-ai",
+    "title": "Bessemer Venture Partners: State of AI 2025",
+    "url": "https://www.bvp.com/atlas/the-state-of-ai-2025",
+    "date": "2025",
+    "tier": 2
+  },
+  {
+    "key": "gsma-gcc",
+    "title": "GSMA Intelligence: Digital industries in the GCC and wider MENA",
+    "url": "https://img.corrierecomunicazioni.it/wp-content/uploads/2025/11/25141129/241124-Digital-Industries-GCC.pdf",
+    "date": "2025",
+    "tier": 2
+  },
+  {
+    "key": "imf-gcc",
+    "title": "IMF: Digital Transformation in the Gulf Cooperation Council Economies",
+    "url": "https://www.imf.org/en/publications/departmental-papers-policy-papers/issues/2025/04/01/digital-transformation-in-the-gulf-cooperation-council-economies-557187",
+    "date": "2025-04-01",
+    "tier": 1
+  }
+]
+

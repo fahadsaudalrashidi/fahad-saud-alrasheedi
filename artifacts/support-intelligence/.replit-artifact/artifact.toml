@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Support Intelligence"
+description = "An executive operations console for live customer-support intelligence: ticket analytics, pipeline health, grounded knowledge search, and an AI agent-assist workspace."
+version = "1.0.0"
+id = "artifacts/support-intelligence"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19411
+
+[services.development]
+run = "pnpm --filter @workspace/support-intelligence run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/support-intelligence", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/support-intelligence/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19411"
+BASE_PATH = "/"

@@ -1,41 +1,110 @@
-# Real-Time Customer Support Intelligence Platform
+# Fahad Technology Solutions — Support Intelligence
 
-An end-to-end pipeline built in a single Colab notebook, using synthetic support-ticket data.
+A bilingual real-time customer-support operations console based on the public notebook at
+`fahadsaudalrashidi/fahad-saud-alrasheedi`. The workspace contains a React
+executive dashboard, an Express API gateway, and a modular FastAPI processing
+service.
 
-## Architecture
+The product brand is **Fahad Technology Solutions / فهد للحلول التقنية**.
 
+## What is implemented
+
+- **Ticket operations:** contract-validated ticket ingestion, search and filters,
+  priority/sentiment signals, status updates, and ticket analytics.
+- **Pipeline:** local transport or an explicitly configured Kafka
+  publish/consume round-trip; append-only Bronze storage; validated, deduplicated
+  Silver upserts; Gold category/day aggregates; a callable pipeline run endpoint.
+  The notebook's stage order is triggered through the API; this app does not
+  run an Airflow scheduler or claim a Kafka cluster is active by default.
+- **Quality and lineage:** built-in Silver contract checks, optional Great
+  Expectations checkpoint, and OpenLineage-compatible run events written to
+  JSONL or emitted with the optional OpenLineage client.
+- **Knowledge assistant:** sentence chunking, dense + BM25 retrieval, reciprocal
+  rank fusion (`k=60`), and reranking. The default feature-hash retriever runs
+  without model downloads; optional transformer mode uses
+  `all-MiniLM-L6-v2`, in-memory Qdrant, and
+  `cross-encoder/ms-marco-MiniLM-L-6-v2`.
+- **Grounded AI chat:** in Replit, the Express gateway calls the managed OpenAI
+  integration and includes retrieved article citations. The standalone
+  FastAPI/Docker app uses a retrieval-grounded suggested reply when no model
+  integration is configured.
+- **Bilingual knowledge:** persisted English and Arabic knowledge articles are
+  indexed for hybrid retrieval; multilingual transformer embeddings are
+  available as an optional mode.
+- **Operations and commercial strategy:** heuristic SLA/sentiment signals,
+  audited escalation preview/apply, editable SAR cost assumptions, and a
+  cited market/competitor strategy view in Arabic and English.
+
+The repository contains synthetic sample tickets and knowledge-base policies,
+not a live customer-data source. Default local mode is self-contained and
+reports its infrastructure as local rather than claiming Kafka, Spark, or a
+remote vector database is connected.
+SLA scores use explicit demo thresholds and are not a trained or validated
+forecast. ROI figures are scenarios built from editable assumptions, not
+measured company costs or financial advice. Market pricing and buyer profiles
+are research hypotheses; they are not Saudi-validated offers.
+
+## Run in Replit
+
+The configured `artifacts/api-server: API Server` workflow starts the Express
+gateway and its Python sidecar. The `artifacts/support-intelligence: web`
+workflow serves the dashboard. Both should be running to use the full console.
+The managed OpenAI integration is configured for assistant-generated replies;
+its credentials are supplied by Replit and are not stored in this repository.
+
+The API service uses `PYTHON_PORT=8031` by default and starts Python from
+`.pythonlibs/bin/python`. Set `PYTHON_EXECUTABLE` if the runtime uses another
+interpreter. The API gateway is the only public entry point for the Python
+service.
+
+## Standalone container
+
+Build and run:
+
+```sh
+docker build -t support-intelligence .
+docker run --rm -p 8000:8000 -v support-data:/data support-intelligence
 ```
-Synthetic Data --> Kafka (KRaft) --> Pydantic Contract --> Delta Lakehouse
-                                                              |
-                                          Bronze -> Silver -> Gold (MERGE)
-                                                              |
-                                                     Great Expectations + OpenLineage
-                                                              |
-                              KB Articles --> Chunking --> Embeddings --> Qdrant + BM25
-                                                              |
-                                                  Hybrid Search + Cross-Encoder Rerank
-                                                              |
-                                                     Airflow DAG (orchestrates all of it)
+
+The mounted `/data` volume retains SQLite tickets, knowledge articles,
+assumptions, audit events, and lineage events between container restarts. The
+API and built dashboard are served from the same container. `/api/docs` exposes
+the FastAPI OpenAPI page and `/api/healthz` is the health check. Use
+`.env.example` as a reference for runtime settings; do not commit a populated
+`.env` file. The container defaults to `/data`; if you pass a local `.env` file,
+set `SUPPORT_DB_PATH` and `LINEAGE_LOG_PATH` to `/data/...` so the named volume
+retains state.
+
+## Optional source infrastructure
+
+The lightweight defaults are intended for a single app instance. Optional
+adapters are declared in `pyproject.toml`:
+
+```sh
+pip install '.[streaming]'          # Kafka producer/consumer
+pip install '.[lakehouse]'          # Spark + Delta Lake adapter
+pip install '.[quality]'            # Great Expectations + OpenLineage client
+pip install '.[rag]'                # SentenceTransformers + Qdrant + BM25
+pip install '.[full-pipeline]'      # all optional pipeline dependencies
 ```
 
-## Modules (`pipeline/`)
+Configure `KAFKA_BOOTSTRAP_SERVERS`, `LAKEHOUSE_MODE=delta`,
+`QUALITY_MODE=great-expectations`, `OPENLINEAGE_MODE=client`, or
+`RAG_MODE=transformer` / `RAG_MODE=multilingual` only after installing the corresponding extra and
+providing the infrastructure those modes require. Missing optional packages
+or unreachable brokers fail with an explicit error instead of silently
+pretending the integration is active.
 
-| Module | Responsibility |
-|---|---|
-| `data_gen.py` | Synthetic KB articles + support tickets, with injected quality issues |
-| `contract.py` | Pydantic data contract (schema validation boundary) |
-| `ingest.py` | Kafka producer/consumer |
-| `lakehouse.py` | Delta Lake bronze/silver/gold with MERGE + schema enforcement |
-| `quality.py` | Great Expectations checkpoint + OpenLineage event emitter |
-| `rag.py` | Chunking, embeddings, Qdrant index, hybrid search, cross-encoder reranking |
+For multi-instance production hosting, use shared durable storage and a shared
+database/lakehouse rather than the default per-instance SQLite file. The
+included SQLite mode is a practical, durable single-instance deployment path;
+the Delta adapter writes the notebook-style Bronze/Silver/Gold layers when
+Spark and a supported storage path are configured.
 
-## Orchestration
+## Tests
 
-`airflow_home/dags/capstone_support_dag.py` defines the DAG
-`generate_data -> kafka_ingest -> lakehouse_load -> quality_gate -> build_rag_index`,
-run end-to-end via `airflow dags test capstone_support_pipeline <date>`.
+Run the backend smoke tests with:
 
-## How to run
-
-Open the notebook in Google Colab and use "Run All". Total runtime: roughly 10-15 minutes
-(includes downloading Kafka, Spark, and the embedding models).
+```sh
+python -m unittest discover -s tests
+```

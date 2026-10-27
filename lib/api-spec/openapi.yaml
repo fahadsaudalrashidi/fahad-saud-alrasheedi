@@ -1,0 +1,691 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: support
+    description: Customer support intelligence operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /support/dashboard:
+    get:
+      operationId: getSupportDashboard
+      tags: [support]
+      summary: Get support analytics summary
+      responses:
+        "200":
+          description: Support dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /support/tickets:
+    get:
+      operationId: listSupportTickets
+      tags: [support]
+      summary: List and filter support tickets
+      parameters:
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/TicketStatus"
+        - in: query
+          name: category
+          schema:
+            $ref: "#/components/schemas/SupportCategory"
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        "200":
+          description: Filtered support tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportTicket"
+    post:
+      operationId: createSupportTicket
+      tags: [support]
+      summary: Ingest a support ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportTicketInput"
+      responses:
+        "201":
+          description: Ticket created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicket"
+        "400":
+          description: Ticket rejected by the data contract
+  /support/tickets/{ticket_id}:
+    patch:
+      operationId: updateSupportTicket
+      tags: [support]
+      summary: Update a ticket status
+      parameters:
+        - in: path
+          name: ticket_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportTicketUpdate"
+      responses:
+        "200":
+          description: Updated ticket
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicket"
+        "404":
+          description: Ticket not found
+  /support/pipeline/health:
+    get:
+      operationId: getPipelineHealth
+      tags: [support]
+      summary: Get pipeline and infrastructure health
+      responses:
+        "200":
+          description: Pipeline stage and infrastructure status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineHealth"
+  /support/pipeline/run:
+    post:
+      operationId: runSupportPipeline
+      tags: [support]
+      summary: Run the ticket processing pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PipelineRunInput"
+      responses:
+        "200":
+          description: Pipeline execution summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineRunResult"
+  /support/market-insights:
+    get:
+      operationId: getMarketInsights
+      tags: [support]
+      summary: Get the sourced market and strategy brief
+      parameters:
+        - in: query
+          name: language
+          required: false
+          schema:
+            type: string
+            enum: [en, ar]
+            default: en
+      responses:
+        "200":
+          description: Market evidence, competitor comparison, SWOT, target segments, and pricing strategy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketInsights"
+  /support/operations:
+    get:
+      operationId: getOperationsAnalytics
+      tags: [support]
+      summary: Get SLA, sentiment, and escalation analytics
+      responses:
+        "200":
+          description: Operational risk analytics derived from current ticket records
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationsAnalytics"
+  /support/operations/financials:
+    get:
+      operationId: getFinancialScenario
+      tags: [support]
+      summary: Get the editable cost and ROI scenario
+      responses:
+        "200":
+          description: Saved assumptions and calculated scenario outputs in SAR
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialScenario"
+    patch:
+      operationId: updateFinancialScenario
+      tags: [support]
+      summary: Save financial scenario assumptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancialAssumptions"
+      responses:
+        "200":
+          description: Updated assumptions and recalculated scenario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialScenario"
+  /support/operations/automation/run:
+    post:
+      operationId: runEscalationAutomation
+      tags: [support]
+      summary: Preview or apply the ticket escalation rules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationRunInput"
+      responses:
+        "200":
+          description: Escalation candidates and any applied ticket updates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AutomationRunResult"
+  /support/knowledge:
+    get:
+      operationId: listKnowledgeArticles
+      tags: [support]
+      summary: List knowledge-base articles
+      responses:
+        "200":
+          description: Indexed knowledge-base articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KnowledgeArticle"
+    post:
+      operationId: createKnowledgeArticle
+      tags: [support]
+      summary: Add and index a knowledge article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KnowledgeArticleInput"
+      responses:
+        "201":
+          description: Saved article and updated search index
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KnowledgeArticle"
+  /support/search:
+    post:
+      operationId: searchKnowledgeBase
+      tags: [support]
+      summary: Search knowledge using hybrid retrieval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchInput"
+      responses:
+        "200":
+          description: Ranked knowledge passages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+  /support/chat:
+    post:
+      operationId: askSupportAssistant
+      tags: [support]
+      summary: Generate a grounded agent-assist answer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatInput"
+      responses:
+        "200":
+          description: Grounded answer with source citations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    SupportCategory:
+      type: string
+      enum:
+        - Shipping
+        - Returns & Refunds
+        - Account & Login
+        - Payment & Billing
+        - Technical Issue
+    TicketStatus:
+      type: string
+      enum: [open, escalated, resolved]
+    SupportTicket:
+      type: object
+      required:
+        - ticket_id
+        - customer_message
+        - agent_response
+        - category
+        - channel
+        - created_at
+        - status
+        - priority
+        - quality_status
+        - sentiment
+      properties:
+        ticket_id: { type: string }
+        customer_message: { type: string }
+        agent_response: { type: ["string", "null"] }
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        channel: { type: string }
+        created_at: { type: string, format: date-time }
+        status: { $ref: "#/components/schemas/TicketStatus" }
+        priority: { type: string, enum: [low, normal, high, urgent] }
+        quality_status: { type: string, enum: [passed, rejected] }
+        sentiment: { type: string, enum: [positive, neutral, negative] }
+        kb_reference: { type: ["string", "null"] }
+    SupportTicketInput:
+      type: object
+      required: [customer_message, category]
+      properties:
+        customer_message: { type: string, minLength: 5, maxLength: 4000 }
+        agent_response: { type: string, maxLength: 4000 }
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        channel: { type: string, maxLength: 40, default: web }
+    SupportTicketUpdate:
+      type: object
+      required: [status]
+      properties:
+        status: { $ref: "#/components/schemas/TicketStatus" }
+    CategoryMetric:
+      type: object
+      required: [category, count]
+      properties:
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        count: { type: integer }
+    DailyMetric:
+      type: object
+      required: [day, count]
+      properties:
+        day: { type: string, format: date }
+        count: { type: integer }
+    DashboardSummary:
+      type: object
+      required: [total_tickets, open_tickets, urgent_tickets, quality_pass_rate, avg_response_minutes, categories, daily_volume]
+      properties:
+        total_tickets: { type: integer }
+        open_tickets: { type: integer }
+        urgent_tickets: { type: integer }
+        quality_pass_rate:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Share of accepted Silver tickets as a percentage from 0 to 100.
+        avg_response_minutes: { type: number }
+        categories:
+          type: array
+          items: { $ref: "#/components/schemas/CategoryMetric" }
+        daily_volume:
+          type: array
+          items: { $ref: "#/components/schemas/DailyMetric" }
+    PipelineStage:
+      type: object
+      required: [name, status, records, last_run_at, detail]
+      properties:
+        name: { type: string }
+        status: { type: string, enum: [healthy, warning, idle] }
+        records: { type: integer }
+        last_run_at: { type: ["string", "null"], format: date-time }
+        detail: { type: string }
+    PipelineHealth:
+      type: object
+      required: [mode, overall_status, stages, infrastructure, last_run_at]
+      properties:
+        mode: { type: string, enum: [local, kafka] }
+        overall_status: { type: string, enum: [healthy, degraded, idle] }
+        stages:
+          type: array
+          items: { $ref: "#/components/schemas/PipelineStage" }
+        infrastructure:
+          type: array
+          items: { $ref: "#/components/schemas/InfrastructureStatus" }
+        last_run_at: { type: ["string", "null"], format: date-time }
+    InfrastructureStatus:
+      type: object
+      required: [name, status, detail]
+      properties:
+        name: { type: string }
+        status: { type: string, enum: [connected, local, unavailable] }
+        detail: { type: string }
+    PipelineRunInput:
+      type: object
+      properties:
+        batch_size: { type: integer, minimum: 1, maximum: 1000, default: 100 }
+    PipelineRunResult:
+      type: object
+      required: [run_id, received, accepted, rejected, bronze_count, silver_count, gold_count, quality_passed, started_at, completed_at]
+      properties:
+        run_id: { type: string }
+        received: { type: integer }
+        accepted: { type: integer }
+        rejected: { type: integer }
+        bronze_count: { type: integer }
+        silver_count: { type: integer }
+        gold_count: { type: integer }
+        quality_passed: { type: boolean }
+        started_at: { type: string, format: date-time }
+        completed_at: { type: string, format: date-time }
+    KnowledgeArticle:
+      type: object
+      required: [article_id, category, title, content]
+      properties:
+        article_id: { type: string }
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        title: { type: string }
+        content: { type: string }
+        language: { type: string, default: en }
+        source: { type: ["string", "null"] }
+        updated_at: { type: ["string", "null"], format: date-time }
+    KnowledgeArticleInput:
+      type: object
+      required: [category, title, content, language]
+      properties:
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        title: { type: string, minLength: 3, maxLength: 200 }
+        content: { type: string, minLength: 20, maxLength: 12000 }
+        language: { type: string, minLength: 2, maxLength: 12 }
+        source: { type: ["string", "null"], maxLength: 500 }
+    RiskState:
+      type: string
+      enum: [on_track, at_risk, breached]
+    SentimentMetric:
+      type: object
+      required: [sentiment, count, share_percent]
+      properties:
+        sentiment: { type: string, enum: [positive, neutral, negative] }
+        count: { type: integer }
+        share_percent: { type: number }
+    SlaRiskTicket:
+      type: object
+      required: [ticket_id, category, created_at, priority, sentiment, status, hours_open, sla_target_hours, risk_score, risk_state, reason]
+      properties:
+        ticket_id: { type: string }
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        created_at: { type: string, format: date-time }
+        priority: { type: string }
+        sentiment: { type: string }
+        status: { $ref: "#/components/schemas/TicketStatus" }
+        hours_open: { type: number }
+        sla_target_hours: { type: number }
+        risk_score: { type: number, minimum: 0, maximum: 1 }
+        risk_state: { $ref: "#/components/schemas/RiskState" }
+        reason: { type: string }
+    OperationsAnalytics:
+      type: object
+      required: [generated_at, dataset_notice, total_tickets, pending_tickets, on_track, at_risk, breached, sentiment, high_risk_tickets, model_note]
+      properties:
+        generated_at: { type: string, format: date-time }
+        dataset_notice: { type: string }
+        total_tickets: { type: integer }
+        pending_tickets: { type: integer }
+        on_track: { type: integer }
+        at_risk: { type: integer }
+        breached: { type: integer }
+        sentiment:
+          type: array
+          items: { $ref: "#/components/schemas/SentimentMetric" }
+        high_risk_tickets:
+          type: array
+          items: { $ref: "#/components/schemas/SlaRiskTicket" }
+        model_note: { type: string }
+    FinancialAssumptions:
+      type: object
+      required: [monthly_tickets, agent_hourly_cost_sar, avg_handle_minutes, automation_deflection_pct, ai_cost_per_ticket_sar, implementation_cost_sar]
+      properties:
+        monthly_tickets: { type: integer, minimum: 1, maximum: 10000000 }
+        agent_hourly_cost_sar: { type: number, minimum: 1, maximum: 1000000 }
+        avg_handle_minutes: { type: number, minimum: 1, maximum: 1440 }
+        automation_deflection_pct: { type: number, minimum: 0, maximum: 100 }
+        ai_cost_per_ticket_sar: { type: number, minimum: 0, maximum: 1000000 }
+        implementation_cost_sar: { type: number, minimum: 0, maximum: 1000000000 }
+    FinancialMetrics:
+      type: object
+      required: [manual_cost_per_ticket_sar, manual_monthly_cost_sar, automated_tickets, ai_monthly_cost_sar, total_monthly_cost_after_sar, monthly_net_savings_sar, annual_net_savings_sar, roi_percent, payback_months]
+      properties:
+        manual_cost_per_ticket_sar: { type: number }
+        manual_monthly_cost_sar: { type: number }
+        automated_tickets: { type: number }
+        ai_monthly_cost_sar: { type: number }
+        total_monthly_cost_after_sar: { type: number }
+        monthly_net_savings_sar: { type: number }
+        annual_net_savings_sar: { type: number }
+        roi_percent: { type: number }
+        payback_months: { type: ["number", "null"] }
+    FinancialScenario:
+      type: object
+      required: [assumptions, metrics, notice]
+      properties:
+        assumptions: { $ref: "#/components/schemas/FinancialAssumptions" }
+        metrics: { $ref: "#/components/schemas/FinancialMetrics" }
+        notice: { type: string }
+    AutomationRunInput:
+      type: object
+      properties:
+        dry_run: { type: boolean, default: true }
+        limit: { type: integer, minimum: 1, maximum: 1000, default: 1000 }
+    AutomationEvent:
+      type: object
+      required: [ticket_id, reason, risk_score, applied]
+      properties:
+        ticket_id: { type: string }
+        reason: { type: string }
+        risk_score: { type: number }
+        applied: { type: boolean }
+    AutomationRunResult:
+      type: object
+      required: [dry_run, examined, candidates, escalated, events, policy_note]
+      properties:
+        dry_run: { type: boolean }
+        examined: { type: integer }
+        candidates: { type: integer }
+        escalated: { type: integer }
+        events:
+          type: array
+          items: { $ref: "#/components/schemas/AutomationEvent" }
+        policy_note: { type: string }
+    MarketSignal:
+      type: object
+      required: [title, evidence, implication, confidence, source_keys]
+      properties:
+        title: { type: string }
+        evidence: { type: string }
+        implication: { type: string }
+        confidence: { type: string, enum: [high, medium, directional] }
+        source_keys:
+          type: array
+          items: { type: string }
+    CompetitorBrief:
+      type: object
+      required: [name, category, positioning, pricing, strengths, limitations, source_keys]
+      properties:
+        name: { type: string }
+        category: { type: string }
+        positioning: { type: string }
+        pricing: { type: string }
+        strengths:
+          type: array
+          items: { type: string }
+        limitations:
+          type: array
+          items: { type: string }
+        source_keys:
+          type: array
+          items: { type: string }
+    TargetSegment:
+      type: object
+      required: [name, buyer, need, entry_wedge, sales_motion]
+      properties:
+        name: { type: string }
+        buyer: { type: string }
+        need: { type: string }
+        entry_wedge: { type: string }
+        sales_motion: { type: string }
+    PricingTier:
+      type: object
+      required: [name, target, packaging, pricing_hypothesis, validation]
+      properties:
+        name: { type: string }
+        target: { type: string }
+        packaging: { type: string }
+        pricing_hypothesis: { type: string }
+        validation: { type: string }
+    StrategySource:
+      type: object
+      required: [key, title, url, date, tier]
+      properties:
+        key: { type: string }
+        title: { type: string }
+        url: { type: string, format: uri }
+        date: { type: string }
+        tier: { type: integer, enum: [1, 2, 3] }
+    MarketInsights:
+      type: object
+      required: [research_date, executive_summary, positioning, market_signals, competitors, swot, target_segments, pricing_strategy, revenue_model, recommendations, limitations, sources]
+      properties:
+        research_date: { type: string, format: date }
+        executive_summary: { type: string }
+        positioning: { type: string }
+        market_signals:
+          type: array
+          items: { $ref: "#/components/schemas/MarketSignal" }
+        competitors:
+          type: array
+          items: { $ref: "#/components/schemas/CompetitorBrief" }
+        swot:
+          type: object
+          required: [strengths, weaknesses, opportunities, threats]
+          properties:
+            strengths: { type: array, items: { type: string } }
+            weaknesses: { type: array, items: { type: string } }
+            opportunities: { type: array, items: { type: string } }
+            threats: { type: array, items: { type: string } }
+        target_segments:
+          type: array
+          items: { $ref: "#/components/schemas/TargetSegment" }
+        pricing_strategy:
+          type: array
+          items: { $ref: "#/components/schemas/PricingTier" }
+        revenue_model:
+          type: array
+          items: { type: string }
+        recommendations:
+          type: array
+          items: { type: string }
+        limitations:
+          type: array
+          items: { type: string }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/StrategySource" }
+    SearchInput:
+      type: object
+      required: [query]
+      properties:
+        query: { type: string, minLength: 1, maxLength: 2000 }
+        limit: { type: integer, minimum: 1, maximum: 10, default: 5 }
+    SearchResult:
+      type: object
+      required: [article_id, article_title, category, text, rerank_score]
+      properties:
+        article_id: { type: string }
+        article_title: { type: string }
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        text: { type: string }
+        rerank_score: { type: number }
+    SearchResponse:
+      type: object
+      required: [query, results]
+      properties:
+        query: { type: string }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/SearchResult" }
+    ChatInput:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string, minLength: 1, maxLength: 4000 }
+        ticket_id: { type: ["string", "null"] }
+    Citation:
+      type: object
+      required: [article_id, title, category, excerpt]
+      properties:
+        article_id: { type: string }
+        title: { type: string }
+        category: { $ref: "#/components/schemas/SupportCategory" }
+        excerpt: { type: string }
+    ChatResponse:
+      type: object
+      required: [answer, citations, model, confidence]
+      properties:
+        answer: { type: string }
+        citations:
+          type: array
+          items: { $ref: "#/components/schemas/Citation" }
+        model: { type: string }
+        confidence: { type: number }
+
